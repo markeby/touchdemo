@@ -70,7 +70,7 @@ void detectHw()
 	  {
 	    if(ln[0]=='N')        //name of device
 	    {
-	      if(strstr(ln,"FT5406")!=NULL) p=1; else p=0;     //Found Raspberry Pi TouchScreen entry
+	      if(strstr(ln,"ADS7846")!=NULL) p=1; else p=0;     //Found Raspberry Pi TouchScreen entry
 	    }
 	    
 	    if ((p==1) && (ln[0]=='H'))        // found handler
@@ -90,7 +90,6 @@ void detectHw()
 }
 
 
-
 void initGUI()
 {
   clearScreen();
@@ -99,8 +98,10 @@ void initGUI()
   displayButton("1");
   displayButton("2");
   displayButton("3");
+  setForeColour(232,77,44);
   displayButton("4");
   displayButton("5");
+  setForeColour(44,77,232);
   displayButton("6");
   displayButton("7");
   

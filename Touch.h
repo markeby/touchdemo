@@ -24,43 +24,41 @@ int initTouch(char * tpath)
 //Returns 0 if no touch available. 1 if Touch start. 2 if touch end. 3 if touch move
 
 int getTouch()
-{
+	{
 	int i;
-  size_t rb;
-  struct input_event ev[64];
-  int retval;
-  
-  retval=0;
-  if(touchAvailable())
-    {
-    rb=read(tfd,ev,sizeof(struct input_event)*64);
-        for (i = 0;  i <  (rb / sizeof(struct input_event)); i++)
-        {
-              if (ev[i].type ==  EV_SYN) 
-                {
-                if(retval==0) retval=3;
-                break;  //action
-                }
-              else if (ev[i].type == EV_KEY && ev[i].code == 330 && ev[i].value == 1) retval=1; //touch start
-              else if (ev[i].type == EV_KEY && ev[i].code == 330 && ev[i].value == 0) retval=2; //touch finish
-              else if (ev[i].type == EV_ABS && ev[i].code == 0 && ev[i].value > 0)
-              {
-			          touchX = ev[i].value;
-		          }
-                else if (ev[i].type == EV_ABS  && ev[i].code == 1 && ev[i].value > 0)
-                {
-			            touchY = ev[i].value;
-		            }
+  	size_t rb;
+  	struct input_event ev[64];
+  	int retval;
 
-	       }
+  	retval=0;
+  	if(touchAvailable())
+    	{
+    	rb=read(tfd,ev,sizeof(struct input_event)*64);
+        	for (i = 0;  i <  (rb / sizeof(struct input_event)); i++)
+        		{
+				printf ("%X  %X  %X\n", ev[i].type, ev[i].code, ev[i].value);
+              	if (ev[i].type ==  EV_SYN)
+                	{
+               		 if(retval==0) retval=3;
+                	break;  //action
+                	}
+              	else if (ev[i].type == EV_KEY && ev[i].code == 330 && ev[i].value == 1)
+					retval=1; //touch start
+              	else if (ev[i].type == EV_KEY && ev[i].code == 330 && ev[i].value == 0)
+					retval=2; //touch finish
+              	else if (ev[i].type == EV_ABS && ev[i].code == 0 && ev[i].value > 0)
+              		touchX = (int)((float)(ev[i].value - 0xA0) / 4.7);
+	         	else if (ev[i].type == EV_ABS  && ev[i].code == 1 && ev[i].value > 0)
+                    touchY = (int)((float)(ev[i].value - 0x180) / 7.4);
+		       	}
 
-    }
+    	}
 
- return retval;
-}
+ 	return retval;
+	}
 
 
-int touchAvailable()  
+int touchAvailable()
 {
   struct timeval tv;
   fd_set fds;
